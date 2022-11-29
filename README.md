@@ -89,3 +89,59 @@ user.sync({ alter: true });
 This checks the current state of the table in db and if there is any change, it will only update that change and not the entire table
 
 To execute, we create a new script in package.json, ie sync `npm run sync` | "sync": "./models/sync.js",
+
+## Execute sql queries
+
+// adding a new entry into the table
+
+```
+User.create({ name: "Jack", email: "jack@mail", age: 22 })
+  .then((data) => {
+    console.log("Data saved successfully", data.toJSON());
+  })
+  .catch((err) => {
+    console.log("err");
+  });
+```
+
+(Even if there is an error the id is incremented)
+
+get details of all users from the table
+
+```
+User.findAll()
+  .then((user) => {
+    console.log(user);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+```
+
+get details of a users from the table with the id
+
+```
+User.findAll({
+  where: {
+    id: 2,
+  },
+})
+  .then((users) => { - users is an array of user with id 2, and we use dataValues property to access the values
+    users.forEach((user) => {
+      console.log(user.dataValues.id, user.dataValues.name);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+```
+
+Or since id is the pk we can use
+
+```
+User.findByPk(1).then((users) => {
+  console.log(user.dataValues.id, user.dataValues.name);
+});
+```
+
+<!-- Taking input from a form and writing it to db -->
