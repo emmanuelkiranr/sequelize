@@ -11,7 +11,7 @@ const sequelize = new Sequelize("person", "root", "My$ql@wb", {
 });
 ```
 
-Then we establish the connection (sequelize uses mysql2 under the hood)
+Then we test the connection (sequelize uses mysql2 under the hood)
 
 ```
 sequelize
@@ -24,11 +24,9 @@ sequelize
   });
 ```
 
-Once connection is established we can start executing queries defined in `user.js`. (similar to person.js in [node-database](https://github.com/emmanuelkiranr/node-database/blob/main/models/person.js))
+Once connection is established we can start executing queries by defining them in `user.js`. (similar to person.js in [node-database](https://github.com/emmanuelkiranr/node-database/blob/main/models/person.js))
 
 `user.js`
-
-Firstly we define a new model, representing a table in the DB. The table columns are defined by the hash that is given as the second argument. Each attribute of the hash represents a column.
 
 ```
 const User = sequelize.define("User", {
@@ -53,20 +51,15 @@ const User = sequelize.define("User", {
   },
 });
 
-export default User;
+<!-- export default User; -->
+User.sync({alter: true});
+
 ```
 
 This will create a new table named "User" in the person db with these columns with their defined properties.
 To execute this query, we use the sync() cmd.
 
-NOTE: since in big project we'll be having multiple files with query to create a table etc. so instead of calling the sync() fn in each of the file, we export the queries of all these files into another file named `sync` and execute it there at once.
-
-`sync.js`
-
 ```
-import user from "./user.js";
-
-
 user.sync();
 ```
 
@@ -92,7 +85,9 @@ To execute, we create a new script in package.json, ie sync `npm run sync` | "sy
 
 ## Execute sql queries
 
-// adding a new entry into the table
+`user.js`
+
+Adding a new entry into the table
 
 ```
 User.create({ name: "Jack", email: "jack@mail", age: 22 })
@@ -144,4 +139,4 @@ User.findByPk(1).then((users) => {
 });
 ```
 
-<!-- Taking input from a form and writing it to db -->
+To execute, we create a new script in package.json, ie sync `npm run sync` | "sync": "./models/user.js".
