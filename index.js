@@ -1,6 +1,8 @@
 // import the functions exported from userController
 import express from "express";
 import passengerController from "./controller/passengerController.js";
+import driverController from "./controller/driverController.js";
+
 import qs from "querystring";
 
 const app = express();
@@ -29,5 +31,27 @@ app.post("/passenger/search", (req, res) => {
     console.log(query);
     console.log(query.id);
     res.end(passengerController.search(query.id));
+  });
+});
+
+app.get("/driver/create", (req, res) => {
+  res.end(driverController.create);
+});
+
+app.get("/driver/get", (req, res) => {
+  res.end(driverController.getAll);
+});
+
+app.post("/driver/search", (req, res) => {
+  let formData = "";
+  req.on("data", (data) => {
+    formData += data;
+  });
+  req.on("end", () => {
+    console.log("req reached");
+    let query = qs.parse(formData);
+    console.log(query);
+    console.log(query.id);
+    res.end(driverController.search(query.id));
   });
 });

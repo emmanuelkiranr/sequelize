@@ -1,3 +1,8 @@
+1. Sequelize
+1. Defining models in cases of multiple tables
+1. Controller
+1. Routing to controllers via express app
+
 # Sequelize
 
 Firstly we instantiate sequelize with name of database, username and password (similar to the db_handler in [node-database](https://github.com/emmanuelkiranr/node-database/blob/main/models/db_handler.js)
@@ -236,7 +241,11 @@ Note: use postman
 
 - since for search query we need the id from the request, we can only get it via an form input, provided the form method is post or via postman. If we put get method and send req from browser it wont work, since get method doesnt put query while sending response, and it returns undefined
 
+- The request urls are created in such a way that it clearly conveys who is executing that query [This convention is useful while doing authentication via middleware etc]
+
 - We get the output to these routes/queries in the terminal.
+
+[similarly create the controller and routing for driver]
 
 Note: while writing fns start by defining the sql query function in the controller, then define its route[routing in index or expressRouter()]
 [in case of displaying the ouput using view create the view after defining the route]
