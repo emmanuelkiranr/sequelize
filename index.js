@@ -8,8 +8,20 @@ import qs from "querystring";
 const app = express();
 app.listen(3000);
 
-app.get("/passenger/create", (req, res) => {
-  res.end(passengerController.create);
+// app.get("/passenger/create", (req, res) => {
+//   res.end(passengerController.create);
+// });
+app.post("/passenger/create", (req, res) => {
+  let formData = "";
+  req.on("data", (data) => {
+    formData += data;
+  });
+  req.on("end", () => {
+    console.log("req reached");
+    let query = qs.parse(formData);
+    console.log(query);
+    res.end(passengerController.create(query));
+  });
 });
 
 app.get("/passenger/get", (req, res) => {
@@ -34,8 +46,21 @@ app.post("/passenger/search", (req, res) => {
   });
 });
 
-app.get("/driver/create", (req, res) => {
-  res.end(driverController.create);
+// app.get("/driver/create", (req, res) => {
+//   res.end(driverController.create);
+// });
+
+app.post("/driver/create", (req, res) => {
+  let formData = "";
+  req.on("data", (data) => {
+    formData += data;
+  });
+  req.on("end", () => {
+    console.log("req reached");
+    let query = qs.parse(formData);
+    console.log(query);
+    res.end(driverController.create(query));
+  });
 });
 
 app.get("/driver/get", (req, res) => {

@@ -1,13 +1,27 @@
 import { Driver } from "../models/models.js";
 
-const create = () => {
+// const create = () => {
+//   Driver.create({
+//     name: "joe",
+//     email: "joe@gmail.com",
+//     password: "pass@456",
+//   })
+//     .then((pass) => {
+//       console.log("Data saved successfully", pass.toJSON());
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// };
+
+const create = (driver) => {
   Driver.create({
-    name: "joe",
-    email: "joe@gmail.com",
-    password: "pass@456",
+    name: driver.name,
+    email: driver.email,
+    password: driver.password,
   })
-    .then((pass) => {
-      console.log("Data saved successfully", pass.toJSON());
+    .then((drive) => {
+      console.log("Data saved successfully", drive.toJSON());
     })
     .catch((err) => {
       console.log(err);
