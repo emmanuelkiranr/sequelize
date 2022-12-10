@@ -4,6 +4,7 @@
 1. Defining models in cases of multiple tables
 1. Controller
 1. Routing to controllers via express app
+1. Routing to controllers via express-router
 
 # Sequelize
 
@@ -249,9 +250,6 @@ Note: use postman
 
 [similarly create the controller and routing for driver]
 
-Note: while writing fns start by defining the sql query function in the controller, then define its route[routing in index or expressRouter()]
-[in case of displaying the ouput using view create the view after defining the route]
-
 ## Taking input from user via form/postman
 
 `passengerController.js`
@@ -289,4 +287,97 @@ app.post("/passenger/create", (req, res) => {
 });
 ```
 
-<!-- currently the output is displayed in terminal, move it to views using hbs then implement the below -->
+## Express Router
+
+Since right now we are routing to all the controllers>models[[both passengers & driver]] via the index.js, this could result in ending up as a huge file with so many routes in big projects.
+
+So we setup routes for each controller.
+Create a folder named routes, inside it create a routes file for each controller ie.
+
+- driverRoutes- for routing to the functions in driverController
+- passengerRoutes- for routing to the functions in passengerRoutes
+
+Then in the index file we use a middleware to point the incomming requests to these routes. which then points them to the controller, which executes the query by connecting to db(models) and renders the output view as response(views).
+
+## driverRouter
+
+- converting the routing for driver controller from index.js to driverRouter
+
+Firstly we start by coding the controller[already done], then we move to the router, [router > driverRoutes.js]. Then we create the hbs view for this which we defined in the controller as res.render(). Then in index.js we tell express to use the driverRoutes.js using a middleware.
+
+`driverRouter.js`
+
+The first route is for `create` fn/query
+
+```
+router.post("/driver/create", driverController.create);
+```
+
+Initially the `index.js` route was like:
+
+```
+app.post("/driver/create", (req, res) => {
+  let formData = "";
+  req.on("data", (data) => {
+    formData += data;
+  });
+  req.on("end", () => {
+    console.log("req reached");
+    let query = qs.parse(formData);
+    console.log(query);
+    res.end(driverController.create(query));
+  });
+});
+```
+
+Because we wanted to get the queries as an object[to pass it to the controller] from the url we did this.
+
+Since the new route is not taking an argument from querystring, we need to update the create fn in the driverController to get the queries directly from the request body.
+
+`driverController.js`
+
+```
+const create = (req, res, next) => {
+  console.log(req.body);
+  Driver.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  })
+    .then((drive) => {
+      console.log("Data saved successfully", drive.toJSON());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+```
+
+Now when the express router routes the req to this fn we can get the query from the req.body [cause here the request itself is routed, earlier the request is handled and the output[query] is passed as parameter].
+
+[NOTE: initially req.body returns undefined since its value is not in object format so we use a npm pkg called `body-parser` which converts the incoming req url into objects. The `{extended: true}` means we need to include the query string as well.]
+
+The above router is similar to writing:
+
+```
+router.post("/driver/create", (req, res, next) => {
+  console.log(req.body);
+  Driver.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  })
+    .then((drive) => {
+      console.log("Data saved successfully", drive.toJSON());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};);
+```
+
+We don't do this cause we wanted a more streamlined process via using controllers. And router is just used for routing the requests to the appropriate controller.
+
+From now on the postman requests would show an error cause we aren't sending any response. Earlier we execute the queries directly from index.js through the res.end().
+
+To avoid this and to send the response to the browser we use handlebars which sends output using res.render().

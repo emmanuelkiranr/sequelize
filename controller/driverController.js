@@ -1,24 +1,11 @@
 import { Driver } from "../models/models.js";
 
-// const create = () => {
-//   Driver.create({
-//     name: "joe",
-//     email: "joe@gmail.com",
-//     password: "pass@456",
-//   })
-//     .then((pass) => {
-//       console.log("Data saved successfully", pass.toJSON());
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
-
-const create = (driver) => {
+const create = (req, res, next) => {
+  console.log(req.body);
   Driver.create({
-    name: driver.name,
-    email: driver.email,
-    password: driver.password,
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
   })
     .then((drive) => {
       console.log("Data saved successfully", drive.toJSON());
@@ -26,7 +13,7 @@ const create = (driver) => {
     .catch((err) => {
       console.log(err);
     });
-};
+}; // - input via postman routed from express-router not the express app
 
 const getAll = () => {
   Driver.findAll().then((Drivers) => {
@@ -34,14 +21,13 @@ const getAll = () => {
   });
 };
 
-const search = (id) => {
-  Driver.findByPk(id).then((Driver) => {
+const search = (req, res, next) => {
+  Driver.findByPk(req.body.id).then((Driver) => {
     console.log(
       Driver.dataValues.id,
       Driver.dataValues.name,
       Driver.dataValues.email
     );
-    console.log(id);
   });
 };
 

@@ -1,13 +1,16 @@
 // import the functions exported from userController
 import express from "express";
 import passengerController from "./controller/passengerController.js";
-import driverController from "./controller/driverController.js";
+// import driverController from "./controller/driverController.js";
+import driverRoutes from "./routes/driverRoutes.js";
+import parser from "body-parser";
 
 import qs from "querystring";
 
 const app = express();
 app.listen(3000);
 
+app.use("/", parser.urlencoded({ extended: true }));
 // app.get("/passenger/create", (req, res) => {
 //   res.end(passengerController.create);
 // });
@@ -46,37 +49,4 @@ app.post("/passenger/search", (req, res) => {
   });
 });
 
-// app.get("/driver/create", (req, res) => {
-//   res.end(driverController.create);
-// });
-
-app.post("/driver/create", (req, res) => {
-  let formData = "";
-  req.on("data", (data) => {
-    formData += data;
-  });
-  req.on("end", () => {
-    console.log("req reached");
-    let query = qs.parse(formData);
-    console.log(query);
-    res.end(driverController.create(query));
-  });
-});
-
-app.get("/driver/get", (req, res) => {
-  res.end(driverController.getAll);
-});
-
-app.post("/driver/search", (req, res) => {
-  let formData = "";
-  req.on("data", (data) => {
-    formData += data;
-  });
-  req.on("end", () => {
-    console.log("req reached");
-    let query = qs.parse(formData);
-    console.log(query);
-    console.log(query.id);
-    res.end(driverController.search(query.id));
-  });
-});
+app.use(driverRoutes);
