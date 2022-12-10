@@ -1,3 +1,5 @@
+## Content
+
 1. Sequelize
 1. Defining models in cases of multiple tables
 1. Controller
@@ -249,3 +251,42 @@ Note: use postman
 
 Note: while writing fns start by defining the sql query function in the controller, then define its route[routing in index or expressRouter()]
 [in case of displaying the ouput using view create the view after defining the route]
+
+## Taking input from user via form/postman
+
+`passengerController.js`
+
+```
+const create = (passenger) => {
+  Passenger.create({
+    name: passenger.name,
+    email: passenger.email,
+    password: passenger.password,
+  })
+    .then((pass) => {
+      console.log("Data saved successfully", pass.toJSON());
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+```
+
+`index.js`
+
+```
+app.post("/passenger/create", (req, res) => {
+  let formData = "";
+  req.on("data", (data) => {
+    formData += data;
+  });
+  req.on("end", () => {
+    console.log("req reached");
+    let query = qs.parse(formData);
+    console.log(query);
+    res.end(passengerController.create(query));
+  });
+});
+```
+
+<!-- currently the output is displayed in terminal, move it to views using hbs then implement the below -->
