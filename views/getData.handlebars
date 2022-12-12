@@ -1,0 +1,17 @@
+<div>
+    {{!-- {{data}} --}}
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        {{#each data}}
+        <tr>
+            <td>{{this.dataValues.id}}</td>
+            <td>{{this.dataValues.name}}</td>
+            <td>{{this.dataValues.email}}</td>
+        </tr>
+        {{/each}}
+    </table>
+</div>
