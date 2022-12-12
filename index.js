@@ -4,10 +4,13 @@ import passengerController from "./controller/passengerController.js";
 // import driverController from "./controller/driverController.js";
 import driverRoutes from "./routes/driverRoutes.js";
 import parser from "body-parser";
-
+import { engine } from "express-handlebars";
 import qs from "querystring";
 
 const app = express();
+
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
 app.listen(3000);
 
 app.use("/", parser.urlencoded({ extended: true }));
