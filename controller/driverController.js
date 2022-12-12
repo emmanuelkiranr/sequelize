@@ -15,9 +15,11 @@ const create = (req, res, next) => {
     });
 }; // - input via postman routed from express-router not the express app
 
-const getAll = () => {
-  Driver.findAll().then((Drivers) => {
-    console.log(Drivers);
+const getAll = (req, res, next) => {
+  Driver.findAll().then((getData) => {
+    res.render("getData", { data: getData });
+    // look at the format of the return viewing the data in the hbs view by {{data}} or {{data.data}}
+    // console.log(getData);
   });
 };
 
