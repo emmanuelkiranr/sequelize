@@ -381,3 +381,38 @@ We don't do this cause we wanted a more streamlined process via using controller
 From now on the postman requests would show an error cause we aren't sending any response. Earlier we execute the queries directly from index.js through the res.end().
 
 To avoid this and to send the response to the browser we use handlebars which sends output using res.render().
+
+## Display the output in views
+
+config handlebars in express using express-handlebars > set the app engine to use express-handlebars, config the app to use handlebars view engine > set up the views directory with layout and partials
+
+Then update the `driverController.js` to send the handlebars views as response.
+
+```
+const getAll = (req, res, next) => {
+  Driver.findAll().then((getData) => {
+    res.render("getData", { data: getData });
+    // look at the format of the return viewing the data in the hbs view by {{data}} or {{data.data}}
+    // console.log(getData);
+  });
+};
+```
+
+`getData.handlebars`
+
+```
+<table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        {{#each data}}
+        <tr>
+            <td>{{this.dataValues.id}}</td>
+            <td>{{this.dataValues.name}}</td>
+            <td>{{this.dataValues.email}}</td>
+        </tr>
+        {{/each}}
+</table>
+```
