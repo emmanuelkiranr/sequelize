@@ -355,7 +355,19 @@ const create = (req, res, next) => {
 
 Now when the express router routes the req to this fn we can get the query from the req.body [cause here the request itself is routed, earlier the request is handled and the output[query] is passed as parameter].
 
-[NOTE: initially req.body returns undefined since its value is not in object format so we use a npm pkg called `body-parser` which converts the incoming req url into objects. The `{extended: true}` means we need to include the query string as well.]
+### body-parser
+
+NOTE: initially req.body returns undefined since its value is not in object format so we use a npm pkg called `body-parser` which converts the incoming req url into objects. The `{extended: true}` means we need to include the query string as well.
+
+`index.js`
+
+```
+import parser from "body-parser";
+...
+app.use("/", parser.urlencoded({extended: true}));
+```
+
+(body-parser should be defined above all middleware, since the execution happens in order and if we declare it after any other middleware that mw would not be able to use the parser to parse the request)
 
 The above router is similar to writing:
 
