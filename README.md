@@ -291,13 +291,20 @@ app.post("/passenger/create", (req, res) => {
 
 Since right now we are routing to all the controllers>models[[both passengers & driver]] via the index.js, this could result in ending up as a huge file with so many routes in big projects.
 
+```
+import express from "express";
+
+const router = express.Router();
+router.get("path", controller.fn)
+```
+
 So we setup routes for each controller.
 Create a folder named routes, inside it create a routes file for each controller ie.
 
 - driverRoutes- for routing to the functions in driverController
 - passengerRoutes- for routing to the functions in passengerRoutes
 
-Then in the index file we use a middleware to point the incomming requests to these routes. which then points them to the controller, which executes the query by connecting to db(models) and renders the output view as response(views).
+Then in the index file we use a middleware to point the incomming requests to these routes [use path ("/passenger" or "/driver") to specify which middleware should be fired on a specific request ]. which then points them to the controller, which executes the query by connecting to db(models) and renders the output view as response(views).
 
 ## driverRouter
 
@@ -354,6 +361,18 @@ const create = (req, res, next) => {
 ```
 
 Now when the express router routes the req to this fn we can get the query from the req.body [cause here the request itself is routed, earlier the request is handled and the output[query] is passed as parameter].
+
+`index.js`
+
+Use a mmiddlware to point to her driverRoutes
+
+```
+import driverRoutes from "./routes/driverRoutes.js";
+
+app.use("/driver", driverRoutes);
+or
+app.use(driverRoutes);
+```
 
 ### body-parser
 
